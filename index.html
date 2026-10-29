@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pest Training · IPM</title>
+<meta name="description" content="Bộ slide đào tạo Quản lý dịch hại tổng hợp (IPM) tiếng Việt, có thuyết minh âm thanh.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef1ec; --paper: #fbfbf8; --ink: #1d2a24; --ink-2: #44524b; --muted: #74817a; --line: #d9ded6;
+    --brand: #1f6b4f; --brand-soft: #e3f0e9; --warn: #b5651d;
+    --font: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101513; --paper: #18201c; --ink: #e4ebe6; --ink-2: #b8c4bd; --muted: #8a978f; --line: #2c3731;
+      --brand: #5cc49a; --brand-soft: #1d3329; --warn: #e0a060;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101513; --paper: #18201c; --ink: #e4ebe6; --ink-2: #b8c4bd; --muted: #8a978f; --line: #2c3731;
+    --brand: #5cc49a; --brand-soft: #1d3329; --warn: #e0a060;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.5; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 28px 24px 48px; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--brand); font-weight: 700; }
+  h1 { margin: 4px 0 6px; font-size: clamp(26px, 4vw, 38px); line-height: 1.15; }
+  .lead { margin: 0; color: var(--ink-2); max-width: 720px; }
+  .stats { display: flex; gap: 22px; }
+  .stats b { display: block; font-size: 24px; color: var(--brand); font-variant-numeric: tabular-nums; }
+  .stats span { font-size: 12px; color: var(--muted); }
+
+  .viewer { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.05); }
+  .bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .bar label { font-weight: 600; font-size: 14px; }
+  select, .btn { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 10px; padding: 9px 12px; min-height: 40px; }
+  select { flex: 1; min-width: 220px; max-width: 560px; cursor: pointer; }
+  .btn { cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { border-color: var(--brand); color: var(--brand); }
+  .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .btn.primary:hover { color: #fff; filter: brightness(1.08); }
+  .frame { position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: var(--bg); border: 1px solid var(--line); }
+  .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .desc { margin: 12px 4px 0; color: var(--ink-2); font-size: 14px; }
+
+  h2 { font-size: 20px; margin: 34px 0 14px; }
+  .modules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .mod { text-align: left; font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px; cursor: pointer; display: grid; grid-template-columns: 40px 1fr; gap: 14px; transition: transform .15s, border-color .15s; }
+  .mod:hover { transform: translateY(-2px); border-color: var(--brand); }
+  .mod[aria-current="true"] { border-color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand); }
+  .mod .n { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); font-weight: 800; }
+  .mod h3 { margin: 0 0 4px; font-size: 16px; line-height: 1.3; }
+  .mod p { margin: 0 0 8px; font-size: 13px; color: var(--ink-2); }
+  .mod small { font-size: 12px; color: var(--muted); }
+
+  .notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .note { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; font-size: 14px; color: var(--ink-2); }
+  .note b { color: var(--ink); display: block; margin-bottom: 4px; }
+  kbd { font-family: inherit; font-size: 12px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; background: var(--bg); }
+  footer { margin-top: 36px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+
+  @media (max-width: 900px) { .modules, .notes { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) {
+    .wrap { padding: 18px 16px 36px; }
+    .modules, .notes { grid-template-columns: 1fr; }
+    .frame { aspect-ratio: auto; height: 72vh; }
+    select { min-width: 0; width: 100%; max-width: none; }
+    .bar .btn { flex: 1; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Integrated Pest Management · Đào tạo nội bộ</div>
+      <h1>Quản lý dịch hại tổng hợp (IPM)</h1>
+      <p class="lead">Bộ slide tiếng Việt cho kho và cơ sở sản xuất thực phẩm: từ nhận thức chung, sinh học dịch hại, giám sát, phòng ngừa đến kiểm soát. Có thuyết minh giọng đọc tiếng Việt khi trình chiếu.</p>
+    </div>
+    <div class="stats"><div><b>6</b><span>Module</span></div><div><b id="totalSlides">146</b><span>Slide</span></div></div>
+  </header>
+
+  <section class="viewer" aria-label="Xem slide">
+    <div class="bar">
+      <label for="moduleSelect">Nội dung:</label>
+      <select id="moduleSelect"></select>
+      <button class="btn primary" id="playBtn" type="button" title="Phát thuyết minh từ slide đầu, tự chuyển slide">▶ Trình chiếu có thuyết minh</button>
+      <a class="btn" id="openBtn" href="#" target="_blank" rel="noopener" title="Mở trong tab mới để trình chiếu toàn màn hình">⛶ Mở tab mới</a>
+    </div>
+    <div class="frame"><iframe id="deckFrame" title="Slide đào tạo IPM" allow="fullscreen; autoplay"></iframe></div>
+    <p class="desc" id="moduleDesc"></p>
+  </section>
+
+  <h2>Lộ trình 6 module</h2>
+  <div class="modules" id="moduleList"></div>
+
+  <h2>Cách sử dụng</h2>
+  <div class="notes">
+    <div class="note"><b>Điều khiển slide</b>Dùng <kbd>←</kbd> <kbd>→</kbd> hoặc nút Trước / Tiếp; <kbd>F</kbd> toàn màn hình; vuốt trái / phải trên điện thoại. Màn hình hẹp tự chuyển sang dạng cuộn.</div>
+    <div class="note"><b>Thuyết minh âm thanh</b>Bấm <kbd>▶ Phát</kbd> trên thanh dưới slide (hoặc <kbd>P</kbd>). Đọc xong tự chuyển slide; chỉnh tốc độ 0,9–1,4×; nút 📝 hiện lời đọc.</div>
+    <div class="note"><b>Lưu ý về giọng đọc</b>Dùng Google Translate TTS nên cần Internet; nội dung lời đọc được gửi tới Google. Không gửi thông tin người học.</div>
+  </div>
+
+  <footer>Tài liệu đào tạo nội bộ, biên soạn lại bằng tiếng Việt và tập trung vào kiến thức chuyên môn về IPM. Thuật ngữ tiếng Anh được giữ trong ngoặc để tiện tra cứu. Khi áp dụng, cần đối chiếu quy định pháp luật địa phương, hướng dẫn của nhà sản xuất hoá chất và đánh giá rủi ro của từng cơ sở.</footer>
+</div>
+
+<script>
+  var MODULES = [
+    { file: 'slides/01-nhan-thuc-ipm.html', title: 'Nhận thức chung về IPM', desc: 'Dịch hại và an toàn thực phẩm, chính sách phòng ngừa, kim tự tháp 3K, đánh giá rủi ro tại cơ sở (SRA), tài liệu và hồ sơ bắt buộc.', slides: 16 },
+    { file: 'slides/02-sinh-hoc-dich-hai.html', title: 'Sinh học các loài dịch hại', desc: 'Chuột và bệnh Leptospirosis, 5 loài gián, mạt sách, côn trùng hại nông sản (SPI), ruồi, kiến, chim, bò sát.', slides: 38 },
+    { file: 'slides/03-giam-sat.html', title: 'Giám sát dịch hại', desc: 'Bẫy chuột và 3 tuyến phòng thủ, đèn bẫy côn trùng, bẫy pheromone, kỹ thuật kiểm tra, mức độ nhiễm, xu hướng, quản lý nhà thầu.', slides: 23 },
+    { file: 'slides/04-phong-ngua-nha-may.html', title: 'Phòng ngừa tại nhà máy', desc: 'Vành đai, mái, cửa, lỗ mở, chiếu sáng, thiết kế thiết bị, vệ sinh, kiểm tra nguyên liệu đầu vào, lưu kho, pallet.', slides: 25 },
+    { file: 'slides/05-phong-ngua-kho-phan-phoi.html', title: 'Phòng ngừa tại kho & phân phối', desc: 'Thông gió kho, bến bốc xếp, chiếu sáng, quản lý rơi vãi, hàng trả về, lưu kho bao bì, pallet và các lỗi thường gặp.', slides: 22 },
+    { file: 'slides/06-kiem-soat-tieu-diet.html', title: 'Kiểm soát & tiêu diệt', desc: 'Đánh giá rủi ro trước khi dùng hoá chất, danh mục thuốc, diệt chuột, phun sương, xông hơi, xử lý nhiệt, cấp đông, khí quyển kiểm soát.', slides: 22 }
+  ];
+
+  var sel = document.getElementById('moduleSelect');
+  var frame = document.getElementById('deckFrame');
+  var openBtn = document.getElementById('openBtn');
+  var descEl = document.getElementById('moduleDesc');
+  var list = document.getElementById('moduleList');
+
+  function theme() {
+    var forced = document.documentElement.getAttribute('data-theme');
+    if (forced) return forced;
+    return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  MODULES.forEach(function (m, i) {
+    var o = document.createElement('option');
+    o.value = i;
+    o.textContent = 'Module ' + (i + 1) + ' · ' + m.title + ' (' + m.slides + ' slide)';
+    sel.appendChild(o);
+
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'mod';
+    b.innerHTML = '<span class="n">' + (i + 1) + '</span><span><h3></h3><p></p><small>' + m.slides + ' slide</small></span>';
+    b.querySelector('h3').textContent = m.title;
+    b.querySelector('p').textContent = m.desc;
+    b.addEventListener('click', function () { select(i); document.querySelector('.viewer').scrollIntoView({ behavior: 'smooth' }); });
+    list.appendChild(b);
+  });
+  document.getElementById('totalSlides').textContent = MODULES.reduce(function (s, m) { return s + m.slides; }, 0);
+
+  function select(i) {
+    var m = MODULES[i];
+    sel.value = i;
+    frame.src = m.file + '?theme=' + theme();
+    openBtn.href = m.file;
+    descEl.textContent = m.desc;
+    Array.prototype.forEach.call(list.children, function (b, k) { b.setAttribute('aria-current', String(k === i)); });
+    try { localStorage.setItem('pt_module', i); } catch (e) {}
+    if (history.replaceState) history.replaceState(null, '', '#m' + (i + 1));
+  }
+
+  sel.addEventListener('change', function () { select(Number(sel.value)); });
+  // Khung hẹp (< 640px) hiển thị slide dạng cuộn, không có thanh thuyết minh: mở tab mới để trình chiếu
+  document.getElementById('playBtn').addEventListener('click', function () {
+    if (frame.clientWidth < 640) { window.open(MODULES[Number(sel.value)].file, '_blank', 'noopener'); return; }
+    try { frame.contentWindow.postMessage({ type: 'pt-play' }, location.origin); } catch (e) {}
+    frame.focus();
+  });
+
+  var fromHash = /^#m(\d)/.exec(location.hash);
+  var saved = null;
+  try { saved = localStorage.getItem('pt_module'); } catch (e) {}
+  var startIdx = fromHash ? Number(fromHash[1]) - 1 : (saved !== null ? Number(saved) : 0);
+  select(startIdx >= 0 && startIdx < MODULES.length ? startIdx : 0);
+</script>
+</body>
+</html>
