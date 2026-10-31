@@ -54,6 +54,14 @@
     '</div>' +
     '<div class="tts-track"><i></i></div>';
   document.body.appendChild(nav);
+  // App đã cài không có nút Back của trình duyệt: thêm đường về trang chủ
+  if (window.top === window && (navigator.standalone === true || matchMedia('(display-mode: standalone)').matches)) {
+    var home = document.createElement('a');
+    home.id = 'appHome';
+    home.href = '../index.html';
+    home.textContent = '‹ Trang chủ';
+    document.body.appendChild(home);
+  }
   var bar = document.createElement('div');
   bar.className = 'progress';
   document.body.appendChild(bar);

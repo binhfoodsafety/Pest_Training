@@ -29,7 +29,15 @@ index.html          trang chủ: droplist + khung xem
 slides/deck.css     giao diện slide dùng chung (16:9, sáng/tối, in)
 slides/deck.js      điều hướng, tự co chữ, thuyết minh TTS
 slides/0x-*.html    6 module
+manifest.webmanifest, sw.js   PWA: cài lên điện thoại, xem slide khi mất mạng
+icons/              favicon và icon app
 ```
+
+## Cài lên iPhone
+
+Mở trang bằng Safari → nút **Chia sẻ** → **Thêm vào MH chính** (Add to Home Screen). App mở toàn màn hình, slide xem được cả khi mất mạng; riêng thuyết minh vẫn cần Internet.
+
+Khi thêm file slide mới, bổ sung vào danh sách `FILES` trong `sw.js`.
 
 ## Xuất bản
 

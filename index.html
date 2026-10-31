@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pest Training · IPM</title>
 <meta name="description" content="Bộ slide đào tạo Quản lý dịch hại tổng hợp (IPM) tiếng Việt, có thuyết minh âm thanh.">
+<link rel="icon" href="icons/favicon.ico" sizes="48x48">
+<link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1f6b4f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pest IPM">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -34,6 +42,12 @@
   .stats { display: flex; gap: 22px; }
   .stats b { display: block; font-size: 24px; color: var(--brand); font-variant-numeric: tabular-nums; }
   .stats span { font-size: 12px; color: var(--muted); }
+
+  .install { display: flex; align-items: center; gap: 12px; background: var(--brand-soft); border: 1px solid var(--brand); border-radius: 14px; padding: 12px 14px; margin-bottom: 16px; font-size: 14px; }
+  .install[hidden] { display: none; }
+  .install img { width: 40px; height: 40px; border-radius: 9px; flex: none; }
+  .install p { margin: 0; flex: 1; min-width: 0; }
+  .install button { font: inherit; font-size: 20px; line-height: 1; border: 0; background: none; color: var(--ink-2); cursor: pointer; width: 40px; height: 40px; flex: none; }
 
   .viewer { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.05); }
   .bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
@@ -84,6 +98,12 @@
     </div>
     <div class="stats"><div><b>6</b><span>Module</span></div><div><b id="totalSlides">146</b><span>Slide</span></div></div>
   </header>
+
+  <div class="install" id="installHint" hidden>
+    <img src="icons/apple-touch-icon.png" alt="">
+    <p><b>Cài lên iPhone:</b> trong Safari, bấm nút Chia sẻ (ô vuông có mũi tên lên), chọn <b>Thêm vào MH chính</b> (Add to Home Screen).</p>
+    <button type="button" id="installClose" aria-label="Đóng hướng dẫn cài đặt">×</button>
+  </div>
 
   <section class="viewer" aria-label="Xem slide">
     <div class="bar">
@@ -160,9 +180,17 @@
   }
 
   sel.addEventListener('change', function () { select(Number(sel.value)); });
+  // Khi chạy như app đã cài, không có tab: mở slide ngay trong app, deck.js thêm nút về trang chủ
+  var standalone = navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  if (standalone) openBtn.removeAttribute('target');
+
   // Khung hẹp (< 640px) hiển thị slide dạng cuộn, không có thanh thuyết minh: mở tab mới để trình chiếu
   document.getElementById('playBtn').addEventListener('click', function () {
-    if (frame.clientWidth < 640) { window.open(MODULES[Number(sel.value)].file, '_blank', 'noopener'); return; }
+    if (frame.clientWidth < 640) {
+      var file = MODULES[Number(sel.value)].file;
+      if (standalone) location.href = file; else window.open(file, '_blank', 'noopener');
+      return;
+    }
     try { frame.contentWindow.postMessage({ type: 'pt-play' }, location.origin); } catch (e) {}
     frame.focus();
   });
@@ -172,6 +200,19 @@
   try { saved = localStorage.getItem('pt_module'); } catch (e) {}
   var startIdx = fromHash ? Number(fromHash[1]) - 1 : (saved !== null ? Number(saved) : 0);
   select(startIdx >= 0 && startIdx < MODULES.length ? startIdx : 0);
+
+  // iOS không tự hiện nút cài đặt nên hiển thị hướng dẫn
+  var hint = document.getElementById('installHint');
+  var ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var hintClosed = null;
+  try { hintClosed = localStorage.getItem('pt_install_closed'); } catch (e) {}
+  hint.hidden = !ios || standalone || hintClosed !== null;
+  document.getElementById('installClose').addEventListener('click', function () {
+    hint.hidden = true;
+    try { localStorage.setItem('pt_install_closed', '1'); } catch (e) {}
+  });
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
 </html>
