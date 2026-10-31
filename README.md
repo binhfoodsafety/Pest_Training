@@ -18,7 +18,7 @@ Trang chủ `index.html` có droplist chọn module và khung xem slide. Mỗi m
 ## Trình chiếu
 
 - `←` `→` / nút Trước – Tiếp, `F` toàn màn hình, `P` phát/tạm dừng thuyết minh; vuốt trên điện thoại.
-- Màn hình hẹp (< 640 px) tự chuyển sang dạng cuộn để đọc.
+- Màn hình hẹp (< 640 px) tự chuyển sang dạng cuộn, vẫn có thanh thuyết minh gọn: đọc từ slide đang xem và tự cuộn theo.
 - Thuyết minh: **Google Translate TTS** tiếng Việt (giống khoá QAFood CIP Training), tốc độ mặc định 1,2×, đọc xong tự chuyển slide. Cần Internet; lời đọc được gửi tới Google.
 - Lời đọc mặc định lấy từ chữ trên slide (bỏ thuật ngữ tiếng Anh trong ngoặc, đọc viết tắt theo phiên âm). Slide nào cần lời đọc riêng thì thêm `<div class="say">…</div>` trong `<section class="slide">`.
 

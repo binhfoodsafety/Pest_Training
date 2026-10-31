@@ -84,7 +84,8 @@
     .modules, .notes { grid-template-columns: 1fr; }
     .frame { aspect-ratio: auto; height: 72vh; }
     select { min-width: 0; width: 100%; max-width: none; }
-    .bar .btn { flex: 1; justify-content: center; }
+    .bar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .bar .btn { justify-content: center; }
   }
 </style>
 </head>
@@ -121,8 +122,8 @@
 
   <h2>Cách sử dụng</h2>
   <div class="notes">
-    <div class="note"><b>Điều khiển slide</b>Dùng <kbd>←</kbd> <kbd>→</kbd> hoặc nút Trước / Tiếp; <kbd>F</kbd> toàn màn hình; vuốt trái / phải trên điện thoại. Màn hình hẹp tự chuyển sang dạng cuộn.</div>
-    <div class="note"><b>Thuyết minh âm thanh</b>Bấm <kbd>▶ Phát</kbd> trên thanh dưới slide (hoặc <kbd>P</kbd>). Đọc xong tự chuyển slide; chỉnh tốc độ 0,9–1,4×; nút 📝 hiện lời đọc.</div>
+    <div class="note"><b>Điều khiển slide</b>Dùng <kbd>←</kbd> <kbd>→</kbd> hoặc nút Trước / Tiếp; <kbd>F</kbd> toàn màn hình; vuốt trái / phải trên điện thoại. Màn hình hẹp tự chuyển sang dạng cuộn, bấm ▶ Phát sẽ đọc từ slide đang xem.</div>
+    <div class="note"><b>Thuyết minh âm thanh</b>Bấm <kbd>▶ Phát</kbd> trên thanh dưới slide (hoặc <kbd>P</kbd>), trên điện thoại cầm dọc cũng nghe được. Đọc xong tự chuyển slide; màn hình rộng chỉnh được tốc độ 0,9–1,4× và có nút 📝 hiện lời đọc.</div>
     <div class="note"><b>Lưu ý về giọng đọc</b>Dùng Google Translate TTS nên cần Internet; nội dung lời đọc được gửi tới Google. Không gửi thông tin người học.</div>
   </div>
 
@@ -182,9 +183,9 @@
   sel.addEventListener('change', function () { select(Number(sel.value)); });
   // Khi chạy như app đã cài, không có tab: mở slide ngay trong app, deck.js thêm nút về trang chủ
   var standalone = navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
-  if (standalone) openBtn.removeAttribute('target');
+  if (standalone) { openBtn.removeAttribute('target'); openBtn.textContent = '⛶ Mở toàn trang'; }
 
-  // Khung hẹp (< 640px) hiển thị slide dạng cuộn, không có thanh thuyết minh: mở tab mới để trình chiếu
+  // Khung hẹp (< 640px): mở trang slide riêng cho rộng chỗ, bấm ▶ Phát ở thanh dưới để nghe
   document.getElementById('playBtn').addEventListener('click', function () {
     if (frame.clientWidth < 640) {
       var file = MODULES[Number(sel.value)].file;

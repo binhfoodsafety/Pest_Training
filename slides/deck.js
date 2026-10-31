@@ -32,9 +32,9 @@
   nav.innerHTML =
     '<div class="grp">' +
       '<button type="button" data-go="first" title="Slide đầu (Home)" aria-label="Slide đầu">⏮</button>' +
-      '<button type="button" data-go="prev" title="Slide trước (←)">‹ Trước</button>' +
+      '<button type="button" data-go="prev" title="Slide trước (←)" aria-label="Slide trước">‹<span class="lbl"> Trước</span></button>' +
       '<span class="count"></span>' +
-      '<button type="button" data-go="next" title="Slide tiếp (→)">Tiếp ›</button>' +
+      '<button type="button" data-go="next" title="Slide tiếp (→)" aria-label="Slide tiếp"><span class="lbl">Tiếp </span>›</button>' +
     '</div>' +
     '<div class="grp audio">' +
       '<button type="button" class="primary" data-tts="play" title="Phát / tạm dừng thuyết minh (P)">▶ Phát</button>' +
@@ -176,6 +176,7 @@
     status: function (m) { statusEl.textContent = m; this.sync(); },
     sync: function () {
       playBtn.textContent = this.active ? (this.paused ? '▶ Tiếp tục' : 'Ⅱ Tạm dừng') : '▶ Phát';
+      document.body.classList.toggle('speaking', this.active);
       muteBtn.textContent = this.muted ? '🔇' : '🔊';
       muteBtn.setAttribute('aria-pressed', String(this.muted));
       trackEl.style.width = (this.parts.length ? this.index / this.parts.length * 100 : 0) + '%';
@@ -273,7 +274,7 @@
     return h ? h.textContent.trim() : '';
   }
 
-  function show(i, fromTts) {
+  function show(i, fromTts, fromScroll) {
     var target = Math.max(0, Math.min(slides.length - 1, i));
     var changed = target !== idx;
     idx = target;
@@ -286,10 +287,33 @@
     if (history.replaceState) history.replaceState(null, '', location.search + '#' + (idx + 1));
     if (!textBox.hidden) textBox.textContent = narration(slides[idx]);
     fit(slides[idx]);
+    if (changed && !fromScroll) scrollToSlide();
     // Chuyển slide bằng tay khi đang đọc: đọc slide mới
     if (changed && !fromTts && tts.active && !tts.paused) tts.start();
     else if (changed && !fromTts && tts.active) tts.stop('Đã dừng đọc vì chuyển slide.');
   }
+
+  // Dạng cuộn: nút Trước/Tiếp và thuyết minh cuộn tới slide; tự cuộn thì nút Phát đọc slide đang xem
+  var scrollLock = 0;
+  function scrollToSlide() {
+    if (!document.body.classList.contains('reading')) return;
+    scrollLock = Date.now() + 800;
+    slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function slideInView() {
+    var root = document.documentElement;
+    if (root.scrollTop + window.innerHeight >= root.scrollHeight - 2) return slides.length - 1;
+    for (var k = 0; k < slides.length; k++) {
+      if (slides[k].getBoundingClientRect().bottom > window.innerHeight * 0.35) return k;
+    }
+    return idx;
+  }
+  function syncToView() {
+    if (!document.body.classList.contains('reading') || tts.active || Date.now() < scrollLock) return;
+    var k = slideInView();
+    if (k !== idx) show(k, true, true);
+  }
+  window.addEventListener('scroll', syncToView, { passive: true });
 
   // Co chữ cho slide dài: giảm --fs đến khi nội dung vừa khung (tối thiểu 0.7)
   function fit(s) {
@@ -304,10 +328,11 @@
 
   function scale() {
     var reading = window.innerWidth < 640 || document.body.classList.contains('reading-forced');
-    if (reading && tts.active) tts.stop();
+    var entering = reading && !document.body.classList.contains('reading');
     document.body.classList.toggle('reading', reading);
     if (reading) {
       slides.forEach(function (s) { s.style.removeProperty('--fs'); });
+      if (entering) { scrollLock = Date.now() + 800; slides[idx].scrollIntoView(); }
       return;
     }
     var w = stage.clientWidth - 24, h = stage.clientHeight - 24;
@@ -325,7 +350,7 @@
     else if (go === 'first') show(0);
     else if (go === 'full') toggleFull();
     else if (go === 'read') { document.body.classList.add('reading-forced'); scale(); exitBtn(); }
-    else if (act === 'play') tts.toggle();
+    else if (act === 'play') { syncToView(); tts.toggle(); }
     else if (act === 'replay') tts.start();
     else if (act === 'stop') tts.stop();
     else if (act === 'mute') { tts.muted = !tts.muted; tts.audio.muted = tts.muted; save('muted', tts.muted); tts.sync(); }
@@ -371,6 +396,7 @@
   stage.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
   stage.addEventListener('touchend', function (e) {
     if (x0 === null) return;
+    if (document.body.classList.contains('reading')) { x0 = null; return; }
     var dx = e.changedTouches[0].clientX - x0;
     if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1));
     x0 = null;
@@ -386,7 +412,7 @@
   // Cho trang chủ điều khiển khi nhúng trong iframe (VD: bấm "Trình chiếu có thuyết minh")
   window.addEventListener('message', function (e) {
     if (e.origin !== location.origin || !e.data) return;
-    if (e.data.type === 'pt-play' && !document.body.classList.contains('reading')) { show(0); tts.start(); }
+    if (e.data.type === 'pt-play') { show(0); tts.start(); }
     if (e.data.type === 'pt-stop') tts.stop();
   });
 })();
